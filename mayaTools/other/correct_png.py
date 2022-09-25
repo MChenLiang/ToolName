@@ -9,20 +9,26 @@ from __future__ import absolute_import
 __author__ = 'ChenLiang.Miao'
 
 # +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+ #
-import sys
-
-from sys import version_info as _swig_python_version_info
-
-if _swig_python_version_info < (2, 7, 0):
-    raise RuntimeError('Python 2.7 or later required')
 
 
 import os
-package = os.path.dirname(__file__).join("site_packages").replace('\\', '/')
+import pathlib
+
+try:
+    from . import script_tool
+except Exception:
+    import script_tool
 
 
 # +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+ #
-try:
-    import pathlib
-except ImportError:
-    sys.path.append(package)
+def run():
+    command_tool = 'C:/Program Files/ImageMagick-7.1.0-Q16/magick.exe'
+    icons = script_tool.get_script_path().parent.joinpath("icons")  # type: pathlib.Path
+    for each in icons.glob("**/*.png"):
+        command = '"{0}" {1} {2}'.format(
+            command_tool, str(each), str(each))
+        os.popen2(command)
+
+
+if __name__ == "__main__":
+    run()

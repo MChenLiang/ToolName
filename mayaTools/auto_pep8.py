@@ -9,20 +9,21 @@ from __future__ import absolute_import
 __author__ = 'ChenLiang.Miao'
 
 # +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+ #
-import sys
-
-from sys import version_info as _swig_python_version_info
-
-if _swig_python_version_info < (2, 7, 0):
-    raise RuntimeError('Python 2.7 or later required')
-
-
 import os
-package = os.path.dirname(__file__).join("site_packages").replace('\\', '/')
+
+from .scripts import script_tool
 
 
 # +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+ #
-try:
-    import pathlib
-except ImportError:
-    sys.path.append(package)
+def run():
+    folder = script_tool.get_script_path()
+    for each in folder.glob("**\\*.py"):
+        print(each)
+        os.popen2(
+            r"C:\ProgramData\Anaconda3\envs\py37\Scripts\autopep8.exe --in-place --aggressive --aggressive %s" %
+            each)
+
+
+# +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+ #
+if __name__ == "__main__":
+    run()

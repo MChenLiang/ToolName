@@ -58,7 +58,6 @@ proc string folder(string $path){
         return $array[0];
     }
     else {
-    print($array);
         return $array[$length - 1];
     }
 
@@ -73,18 +72,30 @@ string $maya_script_path = dirname(dirname($asInstallScriptLocation));
 
 string $scriptName=folder($asInstallScriptLocation);
 
+int $api_ver = (int)`about -api`;
 
 string $command  = "import sys\r\n" +
 "in_path='" +$maya_script_path + "'\r\n" +
-"in_path in sys.path or sys.path.append(in_path)\r\n" +
-"from " + $scriptName+".scripts" +" import openUI\r\n"+
-"reload(openUI)\r\n" +
-"openUI.show()";
+"in_path in sys.path and sys.path.remove(in_path)\r\n" +
+"sys.path.insert(0, in_path)\r\n" +
+"from " + $scriptName+".scripts" +" import open_ui\r\n";
+
+if($api_ver < 20220000){
+    $command += "reload(open_ui)\r\n";
+}
+else{
+    $command += "import importlib\r\n";
+    $command += "importlib.reload(open_ui)\r\n";
+}
+
+
+$command += "open_ui.encryption()";
 
 string $icon=dirname($asInstallScriptLocation)+"/icons/MCL.png";
 shelfButton
 	-command $command
 	-annotation $scriptName
+	-imageOverlayLabel $scriptName
 	-label $scriptName
 	-image $icon
 	-image1 $icon
